@@ -7,26 +7,35 @@ import numpy as np
 
 
 class QNet(nn.Module):
-    def __init__(self, input_size, hidden_size, output_size):
+    l1: nn.Linear
+    l2: nn.Linear
+
+    def __init__(self, input_size: int, hidden_size: int, output_size: int) -> None:
         super().__init__()
         self.l1 = nn.Linear(input_size, hidden_size)
         self.l2 = nn.Linear(hidden_size, output_size)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = F.relu(self.l1(x))
         x = self.l2(x)
         return x
 
 
 class QTrainer:
-    def __init__(self, model, lr, gamma):
+    mode: QNet
+    lr: float
+    gamma: float
+    optimizer: optim.Adam
+    criterion: nn.MSELoss
+
+    def __init__(self, model: QNet, lr: float, gamma: float) -> None:
         self.model = model
         self.lr = lr
         self.gamma = gamma
         self.optimizer = optim.Adam(model.parameters(), lr=self.lr)
         self.criterion = nn.MSELoss()
 
-    def train_step(self, state, action, reward, next_state, done):
+    def train_step(self, state, action, reward, next_state, done) -> None:
         state = torch.tensor(np.array(state), dtype=torch.float)
         next_state = torch.tensor(np.array(next_state), dtype=torch.float)
         action = torch.tensor(np.array(action), dtype=torch.long)

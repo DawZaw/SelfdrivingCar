@@ -1,27 +1,31 @@
+import numpy as np
 import pygame as pg
 from agent import Agent
 from game import Game
 from settings import *
 
-game = Game()
-agent = Agent(input_size=len(game.car.sensor))
+game: Game = Game()
+agent: Agent = Agent(input_size=len(game.car.sensors))
 
 
-def main():
-    highscore = 0
+def main() -> None:
+    highscore: int = 0
     while True:
         CLOCK.tick(FPS)
-        fps = str(int(CLOCK.get_fps()))
+        fps: str = str(int(CLOCK.get_fps()))
         pg.display.set_caption("Selfdriving Car | FPS: " + fps)
         game.handle_events()
 
         # Get initial state
-        state_old = agent.get_state(game)
+        state_old: np.ndarray = agent.get_state(game)
         # Get move
-        final_move = agent.get_action(state_old)
+        final_move: list[int] = agent.get_action(state_old)
         # Performe move and get new state
+        reward: int
+        done: bool
+        score: int
         reward, done, score = game.update(final_move)
-        state_new = agent.get_state(game)
+        state_new: np.ndarray = agent.get_state(game)
 
         # Train short memory
         agent.train_short_memory(state_old, final_move, reward, state_new, done)
