@@ -15,7 +15,7 @@ Based on reward and punishment system, agent tries to maximize rewards, while av
 - PyTorch
 
 #### Start of learning process
-At the beggining agent is exploring new environment, a lot of crashes are expected.
+At the beginning agent is exploring new environment, a lot of crashes are expected.
 <div align="center">
     <img src="images/first_episodes.gif" />
 </div>
